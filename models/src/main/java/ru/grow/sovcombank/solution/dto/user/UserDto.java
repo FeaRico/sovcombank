@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.grow.sovcombank.solution.dto.base.TimeObject;
-import ru.grow.sovcombank.solution.dto.broker.BrokerAccountDto;
 import ru.grow.sovcombank.solution.types.Role;
-
-import java.util.List;
 
 @Getter
 @Setter

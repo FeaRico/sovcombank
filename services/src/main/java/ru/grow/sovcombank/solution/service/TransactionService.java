@@ -6,7 +6,7 @@ import ru.grow.sovcombank.solution.types.TransactionType;
 import java.util.List;
 
 public interface TransactionService {
-    List<FinanceTransactionDto> getAllByUserAccountId(Long accountId);
+    List<FinanceTransactionDto> getAllByAccountId(Long accountId);
 
     List<FinanceTransactionDto> getAllByAccountIdAndType(Long accountId, TransactionType type);
 }

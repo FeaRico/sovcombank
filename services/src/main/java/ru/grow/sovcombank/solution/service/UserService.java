@@ -15,4 +15,6 @@ public interface UserService {
     UserDto update(UserInfoUpdateDto user, Principal principal);
 
     UserDto updatePassword(UserPasswordUpdateDto user, Principal principal);
+
+
 }

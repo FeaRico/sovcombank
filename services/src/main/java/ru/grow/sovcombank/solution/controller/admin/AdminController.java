@@ -3,21 +3,27 @@ package ru.grow.sovcombank.solution.controller.admin;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.grow.sovcombank.solution.dto.user.UserPreviewDto;
+import ru.grow.sovcombank.solution.service.AdminService;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/admin")
 public class AdminController {
+    private final AdminService adminService;
+
+    public AdminController(AdminService adminService) {
+        this.adminService = adminService;
+    }
 
     // TODO: 19.11.2022 Заменить на пагинацию!
+
     /**
      * @return всех пользователей
      */
     @GetMapping
-    public ResponseEntity<List<UserPreviewDto>> getAllUsers(Principal principal) {
-        return null;
+    public ResponseEntity<List<UserPreviewDto>> getAllUsers() {
+        return ResponseEntity.ok(adminService.getAllUsers());
     }
 
     /**
@@ -26,7 +32,7 @@ public class AdminController {
      */
     @GetMapping("/valid")
     public ResponseEntity<List<UserPreviewDto>> getUsersByValidStatus(@RequestParam Boolean status) {
-        return null;
+        return ResponseEntity.ok(adminService.getUsersByValidStatus(status));
     }
 
     /**
@@ -35,7 +41,7 @@ public class AdminController {
      */
     @GetMapping("/block")
     public ResponseEntity<List<UserPreviewDto>> getUsersByBlockStatus(@RequestParam Boolean status) {
-        return null;
+        return ResponseEntity.ok(adminService.getUsersByBlockStatus(status));
     }
 
     /**
@@ -47,7 +53,7 @@ public class AdminController {
      */
     @PutMapping("/{userId}/block")
     public ResponseEntity<UserPreviewDto> changeAccountBlockStatus(@PathVariable Long userId, @RequestBody Boolean status) {
-        return null;
+        return ResponseEntity.ok(adminService.changeAccountBlockStatus(userId, status));
     }
 
     /**
@@ -59,6 +65,6 @@ public class AdminController {
      */
     @PutMapping("/{userId}/validation")
     public ResponseEntity<UserPreviewDto> changeAccountValidStatus(@PathVariable Long userId, @RequestBody Boolean status) {
-        return null;
+        return ResponseEntity.ok(adminService.changeAccountValidStatus(userId, status));
     }
 }

@@ -6,12 +6,18 @@ import ru.grow.sovcombank.solution.dto.broker.BalanceChangeDto;
 import ru.grow.sovcombank.solution.dto.broker.BrokerAccountAddDto;
 import ru.grow.sovcombank.solution.dto.broker.BrokerAccountDto;
 import ru.grow.sovcombank.solution.dto.broker.BrokerAccountUpdateDto;
+import ru.grow.sovcombank.solution.service.BrokerAccountService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/broker/account")
 public class BrokerAccountController {
+    private final BrokerAccountService brokerAccountService;
+
+    public BrokerAccountController(BrokerAccountService brokerAccountService) {
+        this.brokerAccountService = brokerAccountService;
+    }
 
     /**
      * Получение брокерских счетов пользователя
@@ -21,7 +27,7 @@ public class BrokerAccountController {
      */
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<BrokerAccountDto>> getAccountsByUserId(@PathVariable Long userId) {
-        return null;
+        return ResponseEntity.ok(brokerAccountService.getAccountsByUserId(userId));
     }
 
     /**
@@ -32,20 +38,9 @@ public class BrokerAccountController {
      */
     @GetMapping("/{accountId}")
     public ResponseEntity<BrokerAccountDto> getAccountById(@PathVariable Long accountId) {
-        return null;
+        return ResponseEntity.ok(brokerAccountService.getAccountById(accountId));
     }
 
-    /**
-     * Добавление брокерского счёта для пользователя
-     *
-     * @param userId        идентификатор пользователя
-     * @param brokerAccount трансферный объект создания брокерского счёта
-     * @return сохранённый брокерский счёт
-     */
-    @PostMapping("/{userId}")
-    public ResponseEntity<BrokerAccountDto> addAccount(@PathVariable Long userId, @RequestBody BrokerAccountAddDto brokerAccount) {
-        return null;
-    }
 
     // TODO: 19.11.2022 Нужно проверять, что юзер меняет баланс именно своей карты!
 
@@ -58,7 +53,7 @@ public class BrokerAccountController {
      */
     @PutMapping("/{accountId}/balance")
     public ResponseEntity<BrokerAccountDto> changeBalance(@PathVariable Long accountId, @RequestBody BalanceChangeDto balanceChangeDto) {
-        return null;
+        return ResponseEntity.ok(brokerAccountService.changeBalance(accountId, balanceChangeDto));
     }
 
     /**
@@ -70,6 +65,19 @@ public class BrokerAccountController {
      */
     @PutMapping("/{accountId}")
     public ResponseEntity<BrokerAccountDto> changeAccount(@PathVariable Long accountId, @RequestBody BrokerAccountUpdateDto brokerAccount) {
-        return null;
+        return ResponseEntity.ok(brokerAccountService.changeBrokerAccount(accountId, brokerAccount));
     }
+
+    /**
+     * Добавление брокерского счёта для пользователя
+     *
+     * @param userId        идентификатор пользователя
+     * @param brokerAccount трансферный объект создания брокерского счёта
+     * @return сохранённый брокерский счёт
+     */
+    @PostMapping("/{userId}")
+    public ResponseEntity<BrokerAccountDto> addAccount(@PathVariable Long userId, @RequestBody BrokerAccountAddDto brokerAccount) {
+        return ResponseEntity.ok(brokerAccountService.addAccount(userId, brokerAccount));
+    }
+
 }
