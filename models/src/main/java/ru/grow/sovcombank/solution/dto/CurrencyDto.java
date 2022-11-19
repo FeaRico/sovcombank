@@ -7,7 +7,6 @@ import lombok.Setter;
 import ru.grow.sovcombank.solution.dto.base.TimeObject;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -20,12 +19,7 @@ public class CurrencyDto extends TimeObject {
     private String code;
 
     /**
-     * Актульное время
-     */
-    private Date currentTime;
-
-    /**
      * Значение валюты
      */
-    private BigDecimal value;
+    private BigDecimal rate;
 }
