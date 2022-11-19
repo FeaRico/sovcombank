@@ -22,4 +22,9 @@ public class UserEntity extends SecurityUserEntity {
 
     @Column(name = "is_valid", nullable = false)
     private Boolean isValidated;
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !isBlocked;
+    }
 }

@@ -4,17 +4,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.grow.sovcombank.solution.dto.user.UserPreviewDto;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/admin")
 public class AdminController {
 
+    // TODO: 19.11.2022 Заменить на пагинацию!
     /**
      * @return всех пользователей
      */
     @GetMapping
-    public ResponseEntity<List<UserPreviewDto>> getAllUsers() {
+    public ResponseEntity<List<UserPreviewDto>> getAllUsers(Principal principal) {
         return null;
     }
 
