@@ -11,10 +11,13 @@ services:
     depends_on:
       - db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/solution
-      - SPRING_DATASOURCE_USERNAME=user
-      - SPRING_DATASOURCE_PASSWORD=user
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url" : "jdbc:postgresql://db:5432/solution",
+        "spring.datasource.username" : "user",
+        "spring.datasource.password" : "user",
+        "spring.jpa.hibernate.ddl-auto" : "update",
+        "spring.jpa.show-sql" : "true"
+      }'
   db:
     image: 'postgres:14.6-alpine'
     container_name: db
