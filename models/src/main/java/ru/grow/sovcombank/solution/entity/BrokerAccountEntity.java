@@ -28,7 +28,7 @@ public class BrokerAccountEntity extends TimeObjectEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "currency_id")
     private CurrencyEntity currency;
 

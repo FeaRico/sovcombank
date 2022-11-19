@@ -12,6 +12,7 @@ import ru.grow.sovcombank.solution.types.Role;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "security_user")
@@ -59,5 +60,18 @@ public class SecurityUserEntity extends TimeObjectEntity implements UserDetails 
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SecurityUserEntity that = (SecurityUserEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(password, that.password) && role == that.role;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password, role);
     }
 }

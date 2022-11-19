@@ -15,7 +15,7 @@ public class UserDto extends TimeObject {
     /**
      * Логин
      */
-    private String login;
+    private String username;
 
     /**
      * Пароль (???)

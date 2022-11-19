@@ -38,8 +38,10 @@ public class UserServiceImpl implements UserService, AdminService {
     public UserDto add(UserAddDto user) {
         UserEntity userEntity = userMapper.addDtoToServer(user);
         userEntity.setCreatedTime(new Date());
-        userEntity.setRole(Role.USER);
+        userEntity.setRole(Role.ROLE_USER);
         userEntity.setPassword(securityService.getPasswordEncoder().encode(user.getPassword()));
+        userEntity.setIsBlocked(false);
+        userEntity.setIsValidated(false);
         BrokerAccountEntity brokerAccount = new BrokerAccountEntity();
         brokerAccount.setName("Стандартный счёт (Руб)");
         brokerAccount.setBalance(BigDecimal.ZERO);

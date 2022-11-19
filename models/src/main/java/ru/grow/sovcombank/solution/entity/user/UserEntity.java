@@ -9,6 +9,7 @@ import ru.grow.sovcombank.solution.entity.PassportEntity;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "p_user")
@@ -39,5 +40,18 @@ public class UserEntity extends SecurityUserEntity {
     @Override
     public boolean isAccountNonLocked() {
         return !isBlocked;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserEntity that = (UserEntity) o;
+        return Objects.equals(passportEntity, that.passportEntity) && Objects.equals(isBlocked, that.isBlocked) && Objects.equals(isValidated, that.isValidated) && Objects.equals(brokerAccounts, that.brokerAccounts);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(passportEntity, isBlocked, isValidated, brokerAccounts);
     }
 }

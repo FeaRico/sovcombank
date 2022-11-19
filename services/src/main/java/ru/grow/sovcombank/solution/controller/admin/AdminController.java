@@ -1,6 +1,7 @@
 package ru.grow.sovcombank.solution.controller.admin;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.grow.sovcombank.solution.dto.user.UserPreviewDto;
 import ru.grow.sovcombank.solution.service.AdminService;
@@ -8,6 +9,7 @@ import ru.grow.sovcombank.solution.service.AdminService;
 import java.util.List;
 
 @RestController
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping("/api/v1/admin")
 public class AdminController {
     private final AdminService adminService;
