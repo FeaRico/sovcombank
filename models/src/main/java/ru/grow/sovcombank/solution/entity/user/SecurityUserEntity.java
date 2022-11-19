@@ -24,7 +24,7 @@ public class SecurityUserEntity extends TimeObjectEntity implements UserDetails 
     @Id
     @Column(unique = true, insertable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
-    @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq", allocationSize = 10000)
+    @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq",  initialValue = 10000)
     private Long id;
 
     @Column(unique = true, nullable = false, length = 30)

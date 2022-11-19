@@ -18,7 +18,7 @@ public class FinanceTransactionEntity extends TimeObjectEntity {
     @Id
     @Column(unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "finance_transaction_id_seq")
-    @SequenceGenerator(name = "transaction_id_seq", sequenceName = "transaction_id_seq", allocationSize = 10000)
+    @SequenceGenerator(name = "transaction_id_seq", sequenceName = "transaction_id_seq", initialValue = 10000)
     private Long id;
 
     @ManyToOne
@@ -29,6 +29,6 @@ public class FinanceTransactionEntity extends TimeObjectEntity {
     @Column(nullable = false)
     private TransactionType type;
 
-    @Column(nullable = false)
+    @Column
     private BigDecimal amount;
 }

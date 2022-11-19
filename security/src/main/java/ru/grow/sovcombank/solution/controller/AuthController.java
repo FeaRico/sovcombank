@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.grow.sovcombank.solution.dto.user.auth.AuthRequest;
 import ru.grow.sovcombank.solution.dto.user.auth.AuthResponse;
+import ru.grow.sovcombank.solution.entity.user.SecurityUserEntity;
 import ru.grow.sovcombank.solution.service.SecurityUserService;
 import ru.grow.sovcombank.solution.utils.JwtUtils;
 
@@ -36,6 +37,12 @@ public class AuthController {
         UserDetails userDetails = securityUserService.loadUserByUsername(authRequest.getUsername());
         String jwt = jwtUtils.generateToken(userDetails);
 
-        return ResponseEntity.ok(new AuthResponse(jwt));
+        AuthResponse authResponse = new AuthResponse(jwt);
+        SecurityUserEntity entity = userDetails instanceof SecurityUserEntity ? (SecurityUserEntity) userDetails : null;
+        if (entity != null) {
+            authResponse.setId(entity.getId());
+            authResponse.setRole(entity.getRole());
+        }
+        return ResponseEntity.ok(authResponse);
     }
 }

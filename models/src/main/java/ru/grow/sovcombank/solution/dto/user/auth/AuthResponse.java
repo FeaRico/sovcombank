@@ -1,8 +1,16 @@
 package ru.grow.sovcombank.solution.dto.user.auth;
 
+import lombok.Getter;
+import lombok.Setter;
+import ru.grow.sovcombank.solution.types.Role;
+
 import java.util.Objects;
 
+@Getter
+@Setter
 public class AuthResponse {
+    private Long id;
+    private Role role;
     private String jwt;
 
     public AuthResponse() {

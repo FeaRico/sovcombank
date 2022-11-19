@@ -18,7 +18,7 @@ public class CurrencyEntity extends TimeObjectEntity {
     @Id
     @Column(unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "currency_id_seq")
-    @SequenceGenerator(name = "currency_id_seq", sequenceName = "currency_id_seq", allocationSize = 500)
+    @SequenceGenerator(name = "currency_id_seq", sequenceName = "currency_id_seq", initialValue = 500)
     private Long id;
 
     // TODO: 19.11.2022 Есть ли курсы с длиной строки > 3?

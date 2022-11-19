@@ -1,6 +1,7 @@
 package ru.grow.sovcombank.solution.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.grow.sovcombank.solution.dto.FinanceTransactionDto;
 import ru.grow.sovcombank.solution.mapper.FinanceTransactionMapper;
 import ru.grow.sovcombank.solution.service.TransactionService;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class TransactionServiceImpl implements TransactionService {
     private final InnerFinanceTransactionService innerFinanceTransactionService;
     private final FinanceTransactionMapper mapper;
@@ -21,6 +23,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<FinanceTransactionDto> getAllByAccountId(Long accountId) {
         return innerFinanceTransactionService.getAllByAccountId(accountId)
                 .map(mapper::toClient)
@@ -28,6 +31,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<FinanceTransactionDto> getAllByAccountIdAndType(Long accountId, TransactionType type) {
         return innerFinanceTransactionService.getAllByAccountIdAndType(accountId, type)
                 .map(mapper::toClient)

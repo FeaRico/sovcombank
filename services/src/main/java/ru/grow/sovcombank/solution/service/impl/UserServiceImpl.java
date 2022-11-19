@@ -1,6 +1,7 @@
 package ru.grow.sovcombank.solution.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.grow.sovcombank.solution.dto.user.*;
 import ru.grow.sovcombank.solution.entity.BrokerAccountEntity;
 import ru.grow.sovcombank.solution.entity.CurrencyEntity;
@@ -12,7 +13,6 @@ import ru.grow.sovcombank.solution.service.UserService;
 import ru.grow.sovcombank.solution.service.inner.InnerCurrencyService;
 import ru.grow.sovcombank.solution.service.inner.InnerUserService;
 import ru.grow.sovcombank.solution.types.Role;
-import ru.grow.sovcombank.solution.utils.SecurityUtils;
 
 import java.math.BigDecimal;
 import java.security.Principal;
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService, AdminService {
     private final InnerUserService innerUserService;
     private final SecurityUserService securityService;
@@ -42,10 +43,13 @@ public class UserServiceImpl implements UserService, AdminService {
         userEntity.setPassword(securityService.getPasswordEncoder().encode(user.getPassword()));
         userEntity.setIsBlocked(false);
         userEntity.setIsValidated(false);
+        userEntity.getPassportEntity().setCreatedTime(new Date());
+
         BrokerAccountEntity brokerAccount = new BrokerAccountEntity();
         brokerAccount.setName("Стандартный счёт (Руб)");
         brokerAccount.setBalance(BigDecimal.ZERO);
         brokerAccount.setCreatedTime(new Date());
+
         CurrencyEntity rub = innerCurrencyService.getCurrencyByCode("RUB");
         if (rub == null) {
             rub = new CurrencyEntity();
@@ -62,26 +66,28 @@ public class UserServiceImpl implements UserService, AdminService {
     // TODO: 19.11.2022 Заменить все эксепшены на кастомные
     @Override
     public UserDto delete(Long id, Principal principal) {
-        if (!SecurityUtils.equalsId(id, principal))
-            throw new IllegalStateException();
+/*        if (!SecurityUtils.equalsId(id, principal))
+            throw new IllegalStateException();*/
         return userMapper.toClient(innerUserService.delete(id));
     }
 
     // TODO: 19.11.2022 Можно сделать проверку через аспекты))
     @Override
     public UserDto update(UserInfoUpdateDto user, Principal principal) {
-        if (!SecurityUtils.equalsId(user.getId(), principal))
-            throw new IllegalStateException();
+/*        if (!SecurityUtils.equalsId(user.getId(), principal))
+            throw new IllegalStateException();*/
         UserEntity entity = userMapper.infoEditDtoToServer(user);
+        entity.setChangedTime(new Date());
         return userMapper.toClient(innerUserService.update(entity));
     }
 
     @Override
     public UserDto updatePassword(UserPasswordUpdateDto user, Principal principal) {
-        if (!SecurityUtils.equalsId(user.getId(), principal))
-            throw new IllegalStateException();
+/*        if (!SecurityUtils.equalsId(user.getId(), principal))
+            throw new IllegalStateException();*/
 
         UserEntity entity = innerUserService.getById(user.getId());
+        entity.setChangedTime(new Date());
 
         if (entity.getPassword().equals(securityService.getPasswordEncoder().encode(user.getOldPassword()))) {
             entity.setPassword(securityService.getPasswordEncoder().encode(user.getNewPassword()));
@@ -90,6 +96,7 @@ public class UserServiceImpl implements UserService, AdminService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserPreviewDto> getAllUsers() {
         return innerUserService.getAll()
                 .map(userMapper::serverToPreviewDto)
@@ -97,6 +104,7 @@ public class UserServiceImpl implements UserService, AdminService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserPreviewDto> getUsersByValidStatus(Boolean status) {
         return innerUserService.getUsersByValidStatus(status)
                 .map(userMapper::serverToPreviewDto)
@@ -104,6 +112,7 @@ public class UserServiceImpl implements UserService, AdminService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserPreviewDto> getUsersByBlockStatus(Boolean status) {
         return innerUserService.getUsersByBlockStatus(status)
                 .map(userMapper::serverToPreviewDto)
@@ -114,6 +123,7 @@ public class UserServiceImpl implements UserService, AdminService {
     public UserPreviewDto changeAccountBlockStatus(Long userId, Boolean status) {
         UserEntity entity = innerUserService.getById(userId);
         entity.setIsBlocked(status);
+        entity.setChangedTime(new Date());
         return userMapper.serverToPreviewDto(innerUserService.update(entity));
     }
 
@@ -121,6 +131,7 @@ public class UserServiceImpl implements UserService, AdminService {
     public UserPreviewDto changeAccountValidStatus(Long userId, Boolean status) {
         UserEntity entity = innerUserService.getById(userId);
         entity.setIsValidated(status);
+        entity.setChangedTime(new Date());
         return userMapper.serverToPreviewDto(innerUserService.update(entity));
     }
 }

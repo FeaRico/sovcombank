@@ -18,11 +18,6 @@ public class UserDto extends TimeObject {
     private String username;
 
     /**
-     * Пароль (???)
-     */
-    private String password;
-
-    /**
      * Паспорт пользователя
      */
     private PassportDto passport;

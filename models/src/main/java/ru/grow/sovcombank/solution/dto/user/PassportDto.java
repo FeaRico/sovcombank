@@ -30,19 +30,9 @@ public class PassportDto extends TimeObject {
     private String middleName;
 
     /**
-     * Гендер
-     */
-    private Gender gender;
-
-    /**
      * День рождения
      */
     private Date dateOfBirth;
-
-    /**
-     * Город рождения
-     */
-    private String cityOfBirth;
 
     /**
      * Серийный номер паспорта
