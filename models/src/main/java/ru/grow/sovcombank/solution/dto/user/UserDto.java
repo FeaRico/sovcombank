@@ -30,12 +30,6 @@ public class UserDto extends TimeObject {
      */
     private PassportDto passport;
 
-    // TODO: 19.11.2022 Убрать юзера в счёт
-    /**
-     * Брокерский счёт
-     */
-    private List<BrokerAccountDto> brokerAccounts;
-
     /**
      * Статус блокировки
      */

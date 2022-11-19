@@ -2,6 +2,7 @@ package ru.grow.sovcombank.solution.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,10 +23,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1/admin", "/api/v1/admin/**").hasAnyAuthority(Role.ADMIN.name())
+                .antMatchers("/api/v1/admin", "/api/v1/admin/**").hasAuthority(Role.ADMIN.name())
                 .antMatchers("/api/v1/transaction", "/api/v1/transaction/**").hasAnyRole(Role.ADMIN.name(), Role.USER.name())
                 .antMatchers("/api/v1/broker/account", "/api/v1/broker/account/**").hasAnyRole(Role.ADMIN.name(), Role.USER.name())
                 .antMatchers("/api/v1/user", "/api/v1/user/**").hasAnyRole(Role.ADMIN.name(), Role.USER.name())
+                .antMatchers(HttpMethod.POST, "/api/v1/user/", "/api/v1/user/**").permitAll()
                 .anyRequest().permitAll()
                 .and().formLogin()
                 .and().httpBasic()

@@ -4,7 +4,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.grow.sovcombank.solution.dto.user.UserAddDto;
 import ru.grow.sovcombank.solution.dto.user.UserDto;
-import ru.grow.sovcombank.solution.dto.user.UserUpdateDto;
+import ru.grow.sovcombank.solution.dto.user.UserInfoUpdateDto;
+import ru.grow.sovcombank.solution.dto.user.UserPasswordUpdateDto;
+
+// TODO: 19.11.2022 Дописать изменение пароля отдельным методом
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -39,7 +42,12 @@ public class UserController {
      * @return измененный пользователь
      */
     @PutMapping
-    public ResponseEntity<UserDto> update(@RequestBody UserUpdateDto userDto) {
+    public ResponseEntity<UserDto> update(@RequestBody UserInfoUpdateDto userDto) {
+        return null;
+    }
+
+    @PutMapping("/name")
+    public ResponseEntity<UserDto> updatePassword(@RequestBody UserPasswordUpdateDto userDto) {
         return null;
     }
 }

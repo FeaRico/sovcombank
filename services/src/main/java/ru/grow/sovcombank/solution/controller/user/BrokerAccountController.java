@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.grow.sovcombank.solution.dto.broker.BalanceChangeDto;
 import ru.grow.sovcombank.solution.dto.broker.BrokerAccountAddDto;
 import ru.grow.sovcombank.solution.dto.broker.BrokerAccountDto;
+import ru.grow.sovcombank.solution.dto.broker.BrokerAccountUpdateDto;
 
 import java.util.List;
 
@@ -57,6 +58,18 @@ public class BrokerAccountController {
      */
     @PutMapping("/{accountId}/balance")
     public ResponseEntity<BrokerAccountDto> changeBalance(@PathVariable Long accountId, @RequestBody BalanceChangeDto balanceChangeDto) {
+        return null;
+    }
+
+    /**
+     * Изменение брокерского счёта (не затрагивается финансовое состояние)
+     *
+     * @param accountId     идентификатор счёта
+     * @param brokerAccount трансферный объект изменения счёта
+     * @return
+     */
+    @PutMapping("/{accountId}")
+    public ResponseEntity<BrokerAccountDto> changeAccount(@PathVariable Long accountId, @RequestBody BrokerAccountUpdateDto brokerAccount) {
         return null;
     }
 }

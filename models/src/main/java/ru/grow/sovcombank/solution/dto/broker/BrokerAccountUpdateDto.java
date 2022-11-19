@@ -13,6 +13,5 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BrokerAccountUpdateDto extends IdObject {
-    private Date changedTime;
     private String accountName;
 }
