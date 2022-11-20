@@ -22,12 +22,11 @@ public class BrokerAccountController {
     /**
      * Получение брокерских счетов пользователя
      *
-     * @param userId идентификатор пользователя
      * @return все брокерские счета по идентификатор пользователя
      */
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<BrokerAccountDto>> getAccountsByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok(brokerAccountService.getAccountsByUserId(userId));
+    @GetMapping("/user")
+    public ResponseEntity<List<BrokerAccountDto>> getAccountsByUser() {
+        return ResponseEntity.ok(brokerAccountService.getAccountsByUser());
     }
 
     /**
@@ -71,13 +70,12 @@ public class BrokerAccountController {
     /**
      * Добавление брокерского счёта для пользователя
      *
-     * @param userId        идентификатор пользователя
      * @param brokerAccount трансферный объект создания брокерского счёта
      * @return сохранённый брокерский счёт
      */
-    @PostMapping("/{userId}")
-    public ResponseEntity<BrokerAccountDto> addAccount(@PathVariable Long userId, @RequestBody BrokerAccountAddDto brokerAccount) {
-        return ResponseEntity.ok(brokerAccountService.addAccount(userId, brokerAccount));
+    @PostMapping
+    public ResponseEntity<BrokerAccountDto> addAccount(@RequestBody BrokerAccountAddDto brokerAccount) {
+        return ResponseEntity.ok(brokerAccountService.addAccount(brokerAccount));
     }
 
 }

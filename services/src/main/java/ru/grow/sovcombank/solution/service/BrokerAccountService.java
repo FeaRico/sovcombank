@@ -8,11 +8,11 @@ import ru.grow.sovcombank.solution.dto.broker.BrokerAccountUpdateDto;
 import java.util.List;
 
 public interface BrokerAccountService {
-    List<BrokerAccountDto> getAccountsByUserId(Long userId);
+    List<BrokerAccountDto> getAccountsByUser();
 
     BrokerAccountDto getAccountById(Long accountId);
 
-    BrokerAccountDto addAccount(Long userId, BrokerAccountAddDto brokerAccount);
+    BrokerAccountDto addAccount(BrokerAccountAddDto brokerAccount);
 
     BrokerAccountDto changeBalance(Long accountId, BalanceChangeDto balanceChangeDto);
 

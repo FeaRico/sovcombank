@@ -17,4 +17,9 @@ public class InnerCurrencyServiceImpl implements InnerCurrencyService {
     public CurrencyEntity getCurrencyByCode(String code) {
         return currencyRepository.getCurrencyByCode(code);
     }
+
+    @Override
+    public CurrencyEntity save(CurrencyEntity currency) {
+        return currencyRepository.save(currency);
+    }
 }

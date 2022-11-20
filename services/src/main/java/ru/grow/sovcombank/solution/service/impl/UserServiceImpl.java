@@ -1,21 +1,22 @@
 package ru.grow.sovcombank.solution.service.impl;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.grow.sovcombank.solution.dto.user.*;
 import ru.grow.sovcombank.solution.entity.BrokerAccountEntity;
 import ru.grow.sovcombank.solution.entity.CurrencyEntity;
+import ru.grow.sovcombank.solution.entity.user.SecurityUserEntity;
 import ru.grow.sovcombank.solution.entity.user.UserEntity;
 import ru.grow.sovcombank.solution.mapper.UserMapper;
 import ru.grow.sovcombank.solution.service.AdminService;
+import ru.grow.sovcombank.solution.service.CurrencyService;
 import ru.grow.sovcombank.solution.service.SecurityUserService;
 import ru.grow.sovcombank.solution.service.UserService;
-import ru.grow.sovcombank.solution.service.inner.InnerCurrencyService;
 import ru.grow.sovcombank.solution.service.inner.InnerUserService;
 import ru.grow.sovcombank.solution.types.Role;
 
 import java.math.BigDecimal;
-import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,13 +26,13 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService, AdminService {
     private final InnerUserService innerUserService;
     private final SecurityUserService securityService;
-    private final InnerCurrencyService innerCurrencyService;
+    private final CurrencyService currencyService;
     private final UserMapper userMapper;
 
-    public UserServiceImpl(InnerUserService innerUserService, SecurityUserService securityService, InnerCurrencyService innerCurrencyService, UserMapper userMapper) {
+    public UserServiceImpl(InnerUserService innerUserService, SecurityUserService securityService, CurrencyService currencyService, UserMapper userMapper) {
         this.innerUserService = innerUserService;
         this.securityService = securityService;
-        this.innerCurrencyService = innerCurrencyService;
+        this.currencyService = currencyService;
         this.userMapper = userMapper;
     }
 
@@ -50,14 +51,7 @@ public class UserServiceImpl implements UserService, AdminService {
         brokerAccount.setBalance(BigDecimal.ZERO);
         brokerAccount.setCreatedTime(new Date());
 
-        CurrencyEntity rub = innerCurrencyService.getCurrencyByCode("RUB");
-        if (rub == null) {
-            rub = new CurrencyEntity();
-            rub.setCreatedTime(new Date());
-            rub.setCode("RUB");
-            // TODO: 19.11.2022 Брать данные с внешнего сервера
-            rub.setRate(BigDecimal.ZERO);
-        }
+        CurrencyEntity rub = currencyService.getCurrencyByCode("RUB");
         brokerAccount.setCurrency(rub);
         userEntity.addBrokerAccount(brokerAccount);
         return userMapper.toClient(innerUserService.save(userEntity));
@@ -65,31 +59,39 @@ public class UserServiceImpl implements UserService, AdminService {
 
     // TODO: 19.11.2022 Заменить все эксепшены на кастомные
     @Override
-    public UserDto delete(Long id, Principal principal) {
-/*        if (!SecurityUtils.equalsId(id, principal))
-            throw new IllegalStateException();*/
-        return userMapper.toClient(innerUserService.delete(id));
+    public UserDto delete() {
+        SecurityUserEntity securityUser = (SecurityUserEntity) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        return userMapper.toClient(innerUserService.delete(securityUser.getId()));
     }
 
-    // TODO: 19.11.2022 Можно сделать проверку через аспекты))
     @Override
-    public UserDto update(UserInfoUpdateDto user, Principal principal) {
-/*        if (!SecurityUtils.equalsId(user.getId(), principal))
-            throw new IllegalStateException();*/
+    public UserDto update(UserInfoUpdateDto user) {
+        SecurityUserEntity securityUser = (SecurityUserEntity) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        UserEntity userEntity = innerUserService.getById(securityUser.getId());
         UserEntity entity = userMapper.infoEditDtoToServer(user);
-        entity.setChangedTime(new Date());
-        return userMapper.toClient(innerUserService.update(entity));
+        userEntity.setUsername(entity.getUsername());
+        userEntity.setPassportEntity(entity.getPassportEntity());
+        userEntity.setChangedTime(new Date());
+
+        return userMapper.toClient(innerUserService.update(userEntity));
     }
 
     @Override
-    public UserDto updatePassword(UserPasswordUpdateDto user, Principal principal) {
-/*        if (!SecurityUtils.equalsId(user.getId(), principal))
-            throw new IllegalStateException();*/
+    public UserDto updatePassword(UserPasswordUpdateDto user) {
+        SecurityUserEntity securityUser = (SecurityUserEntity) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
 
-        UserEntity entity = innerUserService.getById(user.getId());
+        UserEntity entity = innerUserService.getById(securityUser.getId());
         entity.setChangedTime(new Date());
 
-        if (entity.getPassword().equals(securityService.getPasswordEncoder().encode(user.getOldPassword()))) {
+        if (securityService.getPasswordEncoder().matches(user.getOldPassword(), entity.getPassword())) {
             entity.setPassword(securityService.getPasswordEncoder().encode(user.getNewPassword()));
         }
         return userMapper.toClient(innerUserService.update(entity));

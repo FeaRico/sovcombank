@@ -9,14 +9,15 @@ import ru.grow.sovcombank.solution.dto.broker.BrokerAccountUpdateDto;
 import ru.grow.sovcombank.solution.entity.BrokerAccountEntity;
 import ru.grow.sovcombank.solution.entity.CurrencyEntity;
 import ru.grow.sovcombank.solution.entity.FinanceTransactionEntity;
+import ru.grow.sovcombank.solution.entity.user.SecurityUserEntity;
 import ru.grow.sovcombank.solution.entity.user.UserEntity;
 import ru.grow.sovcombank.solution.mapper.BrokerAccountMapper;
-import ru.grow.sovcombank.solution.mapper.FinanceTransactionMapper;
 import ru.grow.sovcombank.solution.service.BrokerAccountService;
+import ru.grow.sovcombank.solution.service.CurrencyService;
 import ru.grow.sovcombank.solution.service.inner.InnerBrokerAccountService;
-import ru.grow.sovcombank.solution.service.inner.InnerCurrencyService;
 import ru.grow.sovcombank.solution.service.inner.InnerUserService;
 import ru.grow.sovcombank.solution.types.TransactionType;
+import ru.grow.sovcombank.solution.utils.SecurityUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,22 +29,20 @@ import java.util.stream.Collectors;
 public class BrokerAccountServiceImpl implements BrokerAccountService {
     private final InnerBrokerAccountService innerBrokerAccountService;
     private final InnerUserService innerUserService;
-    private final InnerCurrencyService innerCurrencyService;
+    private final CurrencyService currencyService;
     private final BrokerAccountMapper mapper;
-    private final FinanceTransactionMapper financeTransactionMapper;
 
-    public BrokerAccountServiceImpl(InnerBrokerAccountService innerBrokerAccountService, InnerUserService innerUserService, InnerCurrencyService innerCurrencyService, BrokerAccountMapper mapper, FinanceTransactionMapper financeTransactionMapper) {
+    public BrokerAccountServiceImpl(InnerBrokerAccountService innerBrokerAccountService, InnerUserService innerUserService, CurrencyService currencyService, BrokerAccountMapper mapper) {
         this.innerBrokerAccountService = innerBrokerAccountService;
         this.innerUserService = innerUserService;
-        this.innerCurrencyService = innerCurrencyService;
+        this.currencyService = currencyService;
         this.mapper = mapper;
-        this.financeTransactionMapper = financeTransactionMapper;
     }
 
-    @Override
     @Transactional(readOnly = true)
-    public List<BrokerAccountDto> getAccountsByUserId(Long userId) {
-        return innerBrokerAccountService.getAccountsByUserId(userId)
+    public List<BrokerAccountDto> getAccountsByUser() {
+        SecurityUserEntity securityUser = SecurityUtils.getUserFromContext();
+        return innerBrokerAccountService.getAccountsByUserId(securityUser.getId())
                 .map(mapper::toClient)
                 .collect(Collectors.toList());
     }
@@ -54,12 +53,13 @@ public class BrokerAccountServiceImpl implements BrokerAccountService {
         return mapper.toClient(innerBrokerAccountService.getById(accountId));
     }
 
-    // TODO: 19.11.2022 Нужна ли проверка по принципалу?
     @Override
-    public BrokerAccountDto addAccount(Long userId, BrokerAccountAddDto brokerAccount) {
-        UserEntity entity = innerUserService.getById(userId);
-        // TODO: 20.11.2022 А если такой валюты нет?
-        CurrencyEntity currency = innerCurrencyService.getCurrencyByCode(brokerAccount.getCurrencyCode());
+    public BrokerAccountDto addAccount(BrokerAccountAddDto brokerAccount) {
+        SecurityUserEntity securityUser = SecurityUtils.getUserFromContext();
+
+        UserEntity entity = innerUserService.getById(securityUser.getId());
+
+        CurrencyEntity currency = currencyService.getCurrencyByCode(brokerAccount.getCurrencyCode());
 
         BrokerAccountEntity accountEntity = mapper.addDtoToServer(brokerAccount);
         accountEntity.setCreatedTime(new Date());
@@ -73,10 +73,18 @@ public class BrokerAccountServiceImpl implements BrokerAccountService {
     @Override
     public BrokerAccountDto changeBalance(Long accountId, BalanceChangeDto balanceChangeDto) {
         BrokerAccountEntity accountEntity = innerBrokerAccountService.getById(accountId);
+
+        SecurityUserEntity securityUser = SecurityUtils.getUserFromContext();
+
+        if (!securityUser.getId().equals(accountEntity.getUser().getId()))
+            throw new IllegalStateException();
+
         BigDecimal balance = accountEntity.getBalance();
         BigDecimal newBalance = null;
+
         if (balanceChangeDto.getTransactionType() == null)
             throw new IllegalStateException();
+
         BigDecimal amount = balanceChangeDto.getAmount();
         if (balanceChangeDto.getTransactionType().equals(TransactionType.INCOME)) {
             newBalance = balance.add(amount);
@@ -87,8 +95,6 @@ public class BrokerAccountServiceImpl implements BrokerAccountService {
             }
             newBalance = balance.subtract(amount);
         }
-        accountEntity.setBalance(newBalance);
-        accountEntity.setChangedTime(new Date());
 
         FinanceTransactionEntity financeTransaction = new FinanceTransactionEntity();
         financeTransaction.setId(null);
@@ -96,6 +102,9 @@ public class BrokerAccountServiceImpl implements BrokerAccountService {
         financeTransaction.setType(balanceChangeDto.getTransactionType());
         financeTransaction.setBrokerAccount(accountEntity);
         financeTransaction.setAmount(amount);
+
+        accountEntity.setBalance(newBalance);
+        accountEntity.setChangedTime(new Date());
         accountEntity.addTransaction(financeTransaction);
         return mapper.toClient(innerBrokerAccountService.update(accountEntity));
     }

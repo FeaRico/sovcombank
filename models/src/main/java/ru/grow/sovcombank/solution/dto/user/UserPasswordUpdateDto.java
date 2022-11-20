@@ -4,13 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.grow.sovcombank.solution.dto.base.TimeObject;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserPasswordUpdateDto extends TimeObject {
+public class UserPasswordUpdateDto {
     private String oldPassword;
     private String newPassword;
 }

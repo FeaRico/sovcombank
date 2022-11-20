@@ -12,6 +12,6 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BrokerAccountUpdateDto extends IdObject {
+public class BrokerAccountUpdateDto {
     private String accountName;
 }
