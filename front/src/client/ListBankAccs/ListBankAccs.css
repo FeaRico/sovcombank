@@ -1,0 +1,100 @@
+.bank-accounts-list {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  padding: 65px 24px 30px 24px;
+  max-height: 800px;
+  overflow-y: scroll;
+
+  font-family: 'Open Sans', sans-serif;
+
+  border: 1px solid rgba(21, 21, 20, 0.1);
+  border-radius: 12px;
+}
+.bank-accounts-list h2 {
+  font-family: 'Open Sans', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  text-align: center;
+  font-size: 24px;
+  line-height: 25px;
+
+  color: #000000;
+}
+.card {
+  border-radius: 12px;
+}
+.bank-account {
+  position: relative;
+  width: 395px;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 21px 24px;
+
+  font-style: normal;
+  font-weight: 700;
+
+  background: #184cfc;
+}
+.bank-account__id {
+  position: absolute;
+  top: 21px;
+  left: 24px;
+
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 25px;
+  /* identical to box height */
+
+  display: flex;
+  align-items: center;
+
+  color: #ffffff;
+}
+.bank-account__wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.bank-account__balance {
+  display: flex;
+  flex-direction: column;
+}
+.bank-account__balance span:first-child {
+  font-size: 14px;
+  line-height: 19px;
+  /* identical to box height */
+
+  display: flex;
+  align-items: center;
+
+  color: rgba(255, 255, 255, 0.7);
+}
+.bank-account__balance span:last-child {
+  font-size: 24px;
+  line-height: 33px;
+  /* identical to box height */
+
+  display: flex;
+  align-items: center;
+
+  color: #ffffff;
+}
+.bank-account__btn {
+  width: 112px;
+  height: 36px;
+  left: 259px;
+  top: 123px;
+
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 19px;
+
+  color: rgba(255, 255, 255, 0.8);
+
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  border: none;
+}

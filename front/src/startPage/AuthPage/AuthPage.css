@@ -1,0 +1,30 @@
+.auth-page {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  gap: 20px;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+}
+.auth-page input {
+  width: 442px;
+  height: 42px;
+
+  background: #ffffff;
+  border: 1px solid #fbfbfb;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 2px rgba(0, 0, 0, 0.06), 0px 0px 1px rgba(0, 0, 0, 0.04);
+  border-radius: 7px;
+}
+.auth-page .form {
+  display: flex;
+  flex-direction: column;
+}
+.auth-page .form__btn_come {
+  padding: 8px 0px 8px 8px;
+
+  background: #184cfc;
+  color: #fff;
+}

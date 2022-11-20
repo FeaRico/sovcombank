@@ -1,0 +1,35 @@
+.nav {
+  max-width: 241px;
+  padding: 80px 32px;
+  flex-grow: 0;
+  background: rgba(24, 76, 252, 0.04);
+}
+.nav__list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  list-style-type: none;
+  gap: 20px;
+  height: 100%;
+}
+.nav__item button {
+  width: 177px;
+  height: 56px;
+
+  border: none;
+  border-radius: 12px;
+
+  cursor: pointer;
+}
+.nav__item_selected button {
+  background: #184cfc;
+  color: #ffffff;
+}
+.avatar {
+  background-image: url('../../assets/svg/avatar-svgrepo-com.svg');
+  background-position: center;
+  background-size: cover;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 30px auto;
+}

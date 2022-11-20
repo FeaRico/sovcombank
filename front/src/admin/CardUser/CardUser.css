@@ -1,0 +1,37 @@
+.card-user {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  gap: 18px;
+  max-height: 380px;
+  width: 260px;
+  background: rgba(24, 76, 252, 0.04);
+  color: #000;
+  padding: 5px;
+}
+.card-user-info__list {
+  list-style-type: none;
+}
+.card-user-info__item {
+  width: 100%;
+  gap: 2px;
+  display: flex;
+  flex-direction: column;
+}
+.card-user-info__item {
+  border-bottom: 1px solid black;
+}
+.card-user-info__item span:last-child {
+  align-self: center;
+}
+.card-user__btn {
+  height: 50px;
+  width: 100%;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+}
+.card-user__btn_block {
+  background-color: red;
+  color: #fff;
+}

@@ -1,0 +1,31 @@
+.invest-portfolio {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 30px;
+  position: relative;
+}
+.invest-portfolio__doughnut {
+  max-width: 800px;
+  max-height: 800px;
+  width: 100% !important;
+  height: 100% !important;
+  position: relative;
+  left: 5%;
+  top: 5%;
+  cursor: pointer;
+}
+
+.invest-portfolio__wrapper {
+  max-width: 900px;
+  width: 100%;
+  flex-grow: 1;
+}
+
+@media screen and (max-width: 1650px) {
+  .invest-portfolio__wrapper {
+    max-width: 568px;
+    max-height: 568px;
+  }
+}
