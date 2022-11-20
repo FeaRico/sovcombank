@@ -8,7 +8,6 @@ import ru.grow.sovcombank.solution.types.TransactionType;
 
 import java.util.List;
 
-// TODO: 19.11.2022 Повесить транзакции 
 @RestController
 @RequestMapping("/api/v1/transaction")
 public class TransactionController {

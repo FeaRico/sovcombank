@@ -1,4 +1,4 @@
-package ru.grow.sovcombank.solution.models;
+package ru.grow.sovcombank.solution.models.fixer;
 
 import lombok.Data;
 
