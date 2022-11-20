@@ -13,20 +13,16 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtils {
-    // Give a secret key for JWT token generating & validation
     private String SECRET_KEY = "secret";
 
-    // get username from the provided token
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    //get the token expiration time
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    // get token infos
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
@@ -49,27 +45,17 @@ public class JwtUtils {
         return createToken(claims, userDetails.getUsername());
     }
 
-    /**
-     * Generate a token for the provided subject (username)
-     *
-     * @param claims
-     * @param subject
-     */
     private String createToken(Map<String, Object> claims, String subject) {
         return Jwts
                 .builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) //Expiration in 36,000,000 ms (10 hours)
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY) // signing with HS256 algorythm
-                .compact();//According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
-        //   compaction of the JWT to a URL-safe string
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .compact();
     }
 
-    /**
-     * Validate token
-     */
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
 

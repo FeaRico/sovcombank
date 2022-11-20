@@ -2,4 +2,4 @@ FROM adoptopenjdk:11-jre-hotspot
 ARG JAR_FILE=app/target/*.jar
 COPY ${JAR_FILE} application.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-Xdebug", "-Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n", "-jar", "/application.jar"]
+ENTRYPOINT ["java", "-Xdebug", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "/application.jar"]

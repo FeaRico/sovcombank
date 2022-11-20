@@ -1,6 +1,7 @@
 package ru.grow.sovcombank.solution.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -41,10 +42,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .authorizeRequests()
                 .antMatchers("/api/v1/auth/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/user/").permitAll()
                 .antMatchers("/api/v1/admin/**").hasAuthority(Role.ROLE_ADMIN.name())
                 .antMatchers("/api/v1/broker/account/**").hasAnyAuthority(Role.ROLE_USER.name(), Role.ROLE_ADMIN.name())
                 .antMatchers("/api/v1/transaction/**").hasAnyAuthority(Role.ROLE_USER.name(), Role.ROLE_ADMIN.name())
-                .antMatchers("/api/v1/user/**").hasAnyAuthority(Role.ROLE_USER.name(), Role.ROLE_ADMIN.name())
+                .antMatchers(HttpMethod.PUT, "/api/v1/user/**").hasAnyAuthority(Role.ROLE_USER.name(), Role.ROLE_ADMIN.name())
+                .antMatchers(HttpMethod.DELETE, "/api/v1/user/**").hasAnyAuthority(Role.ROLE_USER.name(), Role.ROLE_ADMIN.name())
+                .antMatchers(HttpMethod.GET, "/api/v1/user/**").hasAnyAuthority(Role.ROLE_USER.name(), Role.ROLE_ADMIN.name())
                 .anyRequest().permitAll()
                 .and()
                 .sessionManagement()

@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FinanceTransactionDto extends TimeObject {
-    // TODO: 20.11.2022 Лучше вынести, либо отдавать id 
+    // TODO: 20.11.2022 Лучше вынести, либо отдавать id
     /**
      * Брокерский счёт которому принадлежит транзакция
      */

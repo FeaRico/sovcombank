@@ -37,6 +37,11 @@
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>1.6.4</version>
         </dependency>
+        <dependency>
+            <groupId>ru.grow.sovcombank</groupId>
+            <artifactId>currency-service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
