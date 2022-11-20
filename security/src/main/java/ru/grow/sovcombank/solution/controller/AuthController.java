@@ -37,7 +37,8 @@ public class AuthController {
         UserDetails userDetails = securityUserService.loadUserByUsername(authRequest.getUsername());
         String jwt = jwtUtils.generateToken(userDetails);
 
-        AuthResponse authResponse = new AuthResponse(jwt);
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setJwt(jwt);
         SecurityUserEntity entity = userDetails instanceof SecurityUserEntity ? (SecurityUserEntity) userDetails : null;
         if (entity != null) {
             authResponse.setId(entity.getId());
