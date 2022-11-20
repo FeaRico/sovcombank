@@ -11,7 +11,7 @@ public interface FinanceTransactionMapper {
     @Mapping(source = "balanceChangeDto.transactionType", target = "type")
     FinanceTransactionEntity toServer(BalanceChangeDto balanceChangeDto);
 
-    @Mapping(source = "entity.brokerAccount", target = "brokerAccount", qualifiedByName = "brokerAccountToClient")
+    @Mapping(source = "entity.brokerAccount.id", target = "brokerAccountId")
     @Mapping(source = "entity.type", target = "transactionType")
     FinanceTransactionDto toClient(FinanceTransactionEntity entity);
 }

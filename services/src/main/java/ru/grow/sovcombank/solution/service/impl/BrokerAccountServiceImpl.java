@@ -12,11 +12,11 @@ import ru.grow.sovcombank.solution.entity.FinanceTransactionEntity;
 import ru.grow.sovcombank.solution.entity.user.SecurityUserEntity;
 import ru.grow.sovcombank.solution.entity.user.UserEntity;
 import ru.grow.sovcombank.solution.mapper.BrokerAccountMapper;
+import ru.grow.sovcombank.solution.service.BalanceService;
 import ru.grow.sovcombank.solution.service.BrokerAccountService;
 import ru.grow.sovcombank.solution.service.CurrencyService;
 import ru.grow.sovcombank.solution.service.inner.InnerBrokerAccountService;
 import ru.grow.sovcombank.solution.service.inner.InnerUserService;
-import ru.grow.sovcombank.solution.types.TransactionType;
 import ru.grow.sovcombank.solution.utils.SecurityUtils;
 
 import java.math.BigDecimal;
@@ -31,12 +31,14 @@ public class BrokerAccountServiceImpl implements BrokerAccountService {
     private final InnerUserService innerUserService;
     private final CurrencyService currencyService;
     private final BrokerAccountMapper mapper;
+    private final BalanceService balanceService;
 
-    public BrokerAccountServiceImpl(InnerBrokerAccountService innerBrokerAccountService, InnerUserService innerUserService, CurrencyService currencyService, BrokerAccountMapper mapper) {
+    public BrokerAccountServiceImpl(InnerBrokerAccountService innerBrokerAccountService, InnerUserService innerUserService, CurrencyService currencyService, BrokerAccountMapper mapper, BalanceService balanceService) {
         this.innerBrokerAccountService = innerBrokerAccountService;
         this.innerUserService = innerUserService;
         this.currencyService = currencyService;
         this.mapper = mapper;
+        this.balanceService = balanceService;
     }
 
     @Transactional(readOnly = true)
@@ -79,31 +81,17 @@ public class BrokerAccountServiceImpl implements BrokerAccountService {
         if (!securityUser.getId().equals(accountEntity.getUser().getId()))
             throw new IllegalStateException();
 
-        BigDecimal balance = accountEntity.getBalance();
-        BigDecimal newBalance = null;
-
-        if (balanceChangeDto.getTransactionType() == null)
-            throw new IllegalStateException();
-
-        BigDecimal amount = balanceChangeDto.getAmount();
-        if (balanceChangeDto.getTransactionType().equals(TransactionType.INCOME)) {
-            newBalance = balance.add(amount);
-        } else if (balanceChangeDto.getTransactionType().equals(TransactionType.EXPANSE)) {
-            int i = balance.compareTo(amount);
-            if (i < 0) {
-                throw new IllegalStateException("Not enough money");
-            }
-            newBalance = balance.subtract(amount);
-        }
+        BrokerAccountDto accountDto = mapper.toClient(accountEntity);
+        BrokerAccountDto updatedAccount = balanceService.calculate(accountDto, balanceChangeDto);
 
         FinanceTransactionEntity financeTransaction = new FinanceTransactionEntity();
         financeTransaction.setId(null);
         financeTransaction.setCreatedTime(new Date());
         financeTransaction.setType(balanceChangeDto.getTransactionType());
         financeTransaction.setBrokerAccount(accountEntity);
-        financeTransaction.setAmount(amount);
+        financeTransaction.setAmount(balanceChangeDto.getAmount());
 
-        accountEntity.setBalance(newBalance);
+        accountEntity.setBalance(updatedAccount.getBalance());
         accountEntity.setChangedTime(new Date());
         accountEntity.addTransaction(financeTransaction);
         return mapper.toClient(innerBrokerAccountService.update(accountEntity));
