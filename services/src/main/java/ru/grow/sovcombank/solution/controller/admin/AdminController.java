@@ -9,6 +9,7 @@ import ru.grow.sovcombank.solution.service.AdminService;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/v1/admin")
 public class AdminController {
     private final AdminService adminService;

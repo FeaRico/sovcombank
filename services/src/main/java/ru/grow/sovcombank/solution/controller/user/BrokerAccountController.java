@@ -11,6 +11,7 @@ import ru.grow.sovcombank.solution.service.BrokerAccountService;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/v1/broker/account")
 public class BrokerAccountController {
     private final BrokerAccountService brokerAccountService;

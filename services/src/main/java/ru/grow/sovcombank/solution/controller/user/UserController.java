@@ -11,6 +11,7 @@ import ru.grow.sovcombank.solution.service.UserService;
 // TODO: 19.11.2022 Дописать изменение пароля отдельным методом
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/v1/user")
 public class UserController {
     private final UserService userService;

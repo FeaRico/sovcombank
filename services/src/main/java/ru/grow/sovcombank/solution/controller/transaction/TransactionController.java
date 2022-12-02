@@ -9,6 +9,7 @@ import ru.grow.sovcombank.solution.types.TransactionType;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/v1/transaction")
 public class TransactionController {
     private final TransactionService transactionService;
